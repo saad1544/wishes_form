@@ -1,0 +1,70 @@
+<!-- Updated wish-form.html without Reset Wishes button -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎁 Send a Birthday Wish</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  <link rel="stylesheet" href="stylesss.css">
+  <style>
+    body { text-align: center; background: linear-gradient(120deg, #ffdde1, #ee9ca7); font-family: Arial, sans-serif; }
+    .container { max-width: 500px; margin: 50px auto; padding: 20px; background: rgb(250, 123, 197); border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    input, textarea, button { width: 90%; margin: 10px 0; padding: 10px; border-radius: 5px; border: none; }
+    textarea { height: 80px; resize: none; }
+    button { background: #ff4081; color: white; font-size: 16px; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #e91e63; }
+    #message { color: green; font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎈 Send Your Birthday Wish 🎈</h1>
+    <input type="text" id="name" placeholder="Your Name">
+    <textarea id="wish" placeholder="Write your wish here..."></textarea>
+    <button onclick="submitWish()">🎁 Send Wish</button>
+    <p id="message"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBpc40Br1kktL94TYZ_aRPJ--Rzw4Qmic",
+      authDomain: "birthday-wishes-5a218.firebaseapp.com",
+      databaseURL: "https://birthday-wishes-5a218-default-rtdb.firebaseio.com",
+      projectId: "birthday-wishes-5a218",
+      storageBucket: "birthday-wishes-5a218.appspot.com",
+      messagingSenderId: "854172757374",
+      appId: "1:854172757374:web:292184d286e482ed44972f",
+      measurementId: "G-8Y57P15J35"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function submitWish() {
+        let name = document.getElementById("name").value.trim();
+        let wish = document.getElementById("wish").value.trim();
+        let message = document.getElementById("message");
+
+        if (name === "" || wish === "") {
+            alert("❌ Please enter your name and a wish!");
+            return;
+        }
+
+        push(ref(db, "wishes"), { name: name, wish: wish })
+            .then(() => {
+                message.innerText = "✅ Your wish has been sent!";
+                document.getElementById("name").value = "";
+                document.getElementById("wish").value = "";
+            })
+            .catch(error => alert("❌ Error: " + error.message));
+    }
+
+    window.submitWish = submitWish;
+  </script>
+</body>
+</html>
